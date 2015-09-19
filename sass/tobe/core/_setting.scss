@@ -1,0 +1,109 @@
+@charset "UTF-8";
+//-----------------------------------------------------	
+// setting scss
+// the project base settings,
+// include font, color and other
+//-----------------------------------------------------	
+
+
+// toggle switch
+//-----------------------------------------------------
+$lte7:                  false !default; //compatible with ie6-7 or not
+$filter:                false !default; //open the css3 filter compatible for ie6-8 or not
+$printStyleSwitch:      false !default; //output print styles or not
+$useRemUnit:            false !default; //use rem as unit or not
+$useRemRate:            20 !default;
+
+// about font
+//-----------------------------------------------------
+$htmlFontSize:          10px !default;
+$baseFontSize:          if($useRemUnit, 1.4rem, 14px) !default;
+$baseLineHeight:        1.5 !default;
+$baseFontFamily:        "Helvetica Neue", Helvetica, Tahoma, 'Microsoft YaHei', sans-serif !default;
+$fontCn:                "SimSun";
+$fontYaHei:             "Microsoft Yahei";
+$fontHeiTi:             "SimHei";
+
+
+// elements spacing between up and down
+//-----------------------------------------------------
+$baseGap:               if($useRemUnit, 2rem, 20px) !default;
+$baseBtnHeight:         if($useRemUnit, 2.8rem, 28px) !default;
+$baseFormHeight:        if($useRemUnit, 1.8rem, 18px) !default;
+$baseFormPadding:       if($useRemUnit, 0.5rem, 5px) !default;
+
+
+// about color
+// color function : http://sass-lang.com/docs/yardoc/Sass/Script/Functions.html
+// lighten($color, $amount)
+// darken($color, $amount)
+// opacify($color, $amount)
+// mix($color1, $color2[, $amount])
+//-----------------------------------------------------	
+$black:                 #000 !default;
+$blackLight:            #333 !default;
+$grayDarker:            #666 !default;
+$grayDark:              #999 !default;
+$gray:                  #ccc !default;
+$grayLight:             #f5f5f5 !default;
+$white:                 #fff !default;
+
+$red:                   #ff0000 !default;
+$blue:                  #0000ff !default;
+$orange:                #ffa500 !default;
+$green:                 #008000 !default;
+$yellow:                #ffff00 !default;
+$pink:                  #ffc0cb !default;
+$purple:                #800080 !default;
+
+//the main color
+$primary:               #0078E7 !default;
+$focusColor:            #52a8ec !default;
+
+// link, 'a' element
+//-----------------------------------------------------
+// if only one value, the value for the slip to darken 5%,
+// if there are two values, the second value will be the slip value
+$linkColor:             #08c !default;
+
+
+// scaffolding
+//-----------------------------------------------------	
+$bodyBgColor:           $white !default;
+$textColor:             $grayDarker !default;
+
+
+// placeholder
+//-----------------------------------------------------
+// Variables are:
+// 1. whether output form of the placeholder style,
+// 2. the placeholder text color
+$placeholder:           true $gray !default;
+
+
+// message component colors
+// warning, error, success, tooltip
+//-----------------------------------------------------	
+// there are three colors for every variiables,
+// 1. textColor,
+// 2. bgColor,
+// 3. borderColor
+$warningColor:               #514721 #FFF6BF #FFD324 !default;
+$errorColor:                 #8A1F11 #FBE3E4 #FBC2C4 !default;
+$successColor:               #264409 #E6EFC2 #C6D880 !default;
+$infoColor:                  #205791 #D5EDF8 #92CAE4 !default;
+
+
+// border-radius
+//-----------------------------------------------------	
+$baseRadius:            5px !default;
+$smallRadius:           3px !default;
+
+
+// z-index
+//-----------------------------------------------------	
+$zindexDropdown:        1000 !default;
+$zindexFixedTopbar:     1010 !default;
+$zindexTooltip:         1020 !default;
+$zindexAlert:           1030 !default;
+$zindexModal:           1100 !default;

@@ -1,0 +1,549 @@
+@charset "UTF-8";
+
+//-----------------------------------------------------
+// mixin scss
+// some commonly used functions.
+// defined by '@mixin' and '%'
+// when use '@mixin' define, called by '@include' way.
+// and when use '%' define, called by '@extent %' way.
+//-----------------------------------------------------
+
+//-----------------------------------------------------
+// author:      jie_yi (http://weibo.com/marvin1023)
+// version:     3.0
+// time:        2014-02-08
+// url:         https://github.com/marvin1023/sassCore/
+//              http://tobe.w3cplus.com/
+//-----------------------------------------------------
+
+//-----------------------------------------------------
+// description: modified the files for myself
+// author:      wangkun
+// date:        2015-09-18
+
+// the list of mixin
+// rem
+// inline-block
+// center-block
+// float
+// clearfix
+// hidden
+// visually-hidden
+// ul-has-style
+// maskPosition
+// ir
+// ellipsis-basic
+// opacity
+// triangle
+// bgcolor-alpha
+// disabled
+// horizontal-line
+// min-height
+// image-2x
+// firefox
+// box-sizing-border
+// all-transition
+// zoom
+// gradient-linear-light
+// gradient-linear-dark
+// reset-filtersz
+// simple-btn
+// simple-table
+// simple-inputText
+// simple-textarea
+// simple-select
+// simple-radio-checkbox
+//-----------------------------------------------------
+
+//-----------------------------------------------------
+// rem
+// output rem unit for numerical property
+@mixin rem($property, $value) {
+  @if $useRemUnit {
+	#{$property}: #{$value / $useRemRate}rem;
+  } @else {
+	#{$property}: #{$value / 2}px;
+  }
+}
+
+//-----------------------------------------------------
+// bg
+@mixin bg($url, $bgColor: transparent, $repeat: no-repeat, $position: 0 0, $bgSize: 100%) {
+  background: $bgColor url("#{$url}") $repeat $position;
+  @include rem(background-size, $bgSize);
+}
+
+//-----------------------------------------------------
+// inline-block
+@mixin inline-block() {
+  display: inline-block;
+  @if $lte7 {
+	*display: inline; *zoom: 1;
+  }
+}
+
+%inline-block {
+  @include inline-block;
+}
+
+//-----------------------------------------------------
+// center-block
+// set a block element to center,
+// it should set the element width
+@mixin center-block() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+%center-block {
+  @include center-block;
+}
+
+//-----------------------------------------------------
+// float
+// float left or right, default float left
+@mixin float($float:left) {
+  float: $float;
+  @if $lte7 {
+	display: inline;
+  }
+}
+
+%float {
+  @include float;
+}
+
+//-----------------------------------------------------
+// clearfix
+@mixin clearfix($display:table) {
+  @if $lte7 {
+	*zoom: 1;
+  }
+  &:before,
+  &:after {
+	content: "";
+	display: $display;
+  }
+  &:after {
+	clear: both;
+  }
+}
+
+%clearfix {
+  @include clearfix;
+}
+
+//-----------------------------------------------------
+// hidden
+// Hide from both screenreaders and browsers
+@mixin hidden() {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+%hidden {
+  @include hidden;
+}
+
+//-----------------------------------------------------
+// visually-hidden
+// Hide only visually, but it it available for screenreaders
+@mixin visually-hidden() {
+  position: absolute;
+  @if $lte7 {
+	clip: rect(1px 1px 1px 1px); //ie6/7
+  }
+  clip: rect(1px, 1px, 1px, 1px); //standard
+}
+
+%visually-hidden {
+  @include visually-hidden;
+}
+
+//-----------------------------------------------------
+// ul-has-style
+// ul has list style
+@mixin ul-has-style($style:disc, $marginLeft: $baseGap) {
+  margin-left: $marginLeft;
+  padding-left: $marginLeft * 2;
+  list-style: $style;
+}
+
+%ul-has-style {
+  @include ul-has-style;
+}
+
+//-----------------------------------------------------
+// maskPosition
+// Generally as a background layer mask
+@mixin maskPosition($zIndex: $zindexDropdown) {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $zIndex;
+}
+
+%position {
+  @include maskPosition;
+}
+
+//-----------------------------------------------------
+// ir
+// Text replace with image
+// Advanced browers use `2` code
+// ie 7-8, do not support color transparent, so use 1;
+// ie 6 use 1, there will be a thin line, so use 3
+// if to be compatible with ie6, please set width property for the element.
+@mixin ir($height:99) {
+  text-shadow: none;
+  border: 0 none;
+  color: transparent; //2
+  @if $lte7 {
+	font: 0/0 a; //1
+	_overflow: hidden; //3
+	_font-size: 10px; //3
+	_line-height: $height; //3
+  }
+}
+
+%ir {
+  @include ir;
+}
+
+//-----------------------------------------------------
+// ellipsis
+// Elements can be set width to application of ellipsis
+%ellipsis-basic {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin ellipsis($width:100%) {
+  @extend %ellipsis-basic;
+  width: $width;
+}
+
+//-----------------------------------------------------
+// Opacity
+// lte8 use filter compatible
+@mixin opacity($opacity:50) {
+  opacity: $opacity / 100;
+  @if $filter {
+	filter: alpha(opacity=$opacity);
+  }
+}
+
+%opacity {
+  @include opacity;
+}
+
+//-----------------------------------------------------
+// triangle
+%triangle-basic {
+  @include inline-block;
+  content: "";
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+@mixin triangle($direction, $size, $borderColor ) {
+  @extend %triangle-basic;
+  @if $direction == top {
+	border-bottom: $size solid $borderColor;
+	border-left: $size dashed transparent;
+	border-right: $size dashed transparent;
+  } @else if $direction == right {
+	border-left: $size solid $borderColor;
+	border-top: $size dashed transparent;
+	border-bottom: $size dashed transparent;
+  } @else if $direction == bottom {
+	border-top: $size solid $borderColor;
+	border-left: $size dashed transparent;
+	border-right: $size dashed transparent;
+  } @else if $direction == left {
+	border-right: $size solid $borderColor;
+	border-top: $size dashed transparent;
+	border-bottom: $size dashed transparent;
+  }
+}
+
+//-----------------------------------------------------
+// bgcolor-alpha
+// set bgColor,
+// for ie6-8 brower, it will use ie filter
+// the default is 'rgba(0,0,0,.5)'
+@mixin bgcolor-alpha($bgcolor: rgba(0,0,0,.5)) {
+  color: #fff;
+  @if $filter {
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled='true', startColorstr='#{ie-hex-str($bgcolor)}', endColorstr='#{ie-hex-str($bgcolor)}');
+  } @else {
+	background-color: #333;
+  }
+  background-color: $bgcolor;
+}
+
+%bgcolor-alpha {
+  @include bgcolor-alpha;
+}
+
+//-----------------------------------------------------
+// disabled
+// disabled styles，add !important
+// used for button
+@mixin disabled($bgColor:#e6e6e6, $textColor:#ababab) {
+  background-color: $bgColor !important;
+  color: $textColor !important;
+  cursor: not-allowed !important;
+}
+
+%disabled {
+  @include disabled;
+}
+
+//-----------------------------------------------------
+// Horizontal interval line
+@mixin horizontal-line($border:1px dashed $gray, $padding:$baseGap) {
+  border-bottom: $border;
+  margin-bottom: $padding;
+  padding-bottom: $padding;
+}
+
+%horizontal-line {
+  @include horizontal-line;
+}
+
+//-----------------------------------------------------
+//min-height
+@mixin min-height($height) {
+  min-height: $height;
+  height: auto !important;
+  @if $lte7 {
+	_height: $height;
+  }
+}
+
+//-----------------------------------------------------
+// Retina images.
+// @include image-2x("../images/img-2x.png", 200px, 200px);
+// Use with care - http://37signals.com/svn/posts/3271-easy-retina-ready-images-using-scss
+@mixin image-2x($url, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+  (-o-min-device-pixel-ratio: 2.6/2),
+  (-webkit-min-device-pixel-ratio: 1.3),
+  (min-device-pixel-ratio: 1.3),
+  (min-resolution: 1.3dppx) {
+	// on retina, use image that's scaled by 2
+	background-image: url('#{$url}');
+	background-size: $width $height;
+  }
+}
+
+//-----------------------------------------------------
+// just for firefox brower
+// @include firefox{
+//    .test{padding-bottom:3px;
+// }}
+@mixin firefox {
+  @-moz-document url-prefix() {
+	@content;
+  }
+}
+
+//-----------------------------------------------------
+// box-sizing-border
+//for Advanced brower, ie8+
+%box-sizing-border {
+  @include box-sizing;
+}
+
+//-----------------------------------------------------
+// all-transition
+// general all transition effect
+%all-transition {
+  @include transition;
+}
+
+//-----------------------------------------------------
+// zoom
+// ie6/7 haslayout
+%zoom {
+  @if $lte7 {
+	*zoom: 1;
+  }
+}
+
+//-----------------------------------------------------
+// Vertical gradient - white
+// gradient-linear-light
+// rgba(255,255,2555,.3) -> rgba(255,255,2555,0)
+%gradient-linear-light {
+  // IE9 SVG, needs conditional override of 'filter' to 'none'
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwLjMiLz4KICAgIDxzdG9wIG9mZnNldD0iNDYlIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+  @include gradient-vertical(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+  @if $filter {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4dffffff', endColorstr='#00ffffff', GradientType=0); /* IE6-8 */
+	:root & {
+	  @extend %reset-filter;
+	}
+  }
+}
+
+//-----------------------------------------------------
+// Vertical gradient - black
+// gradient-linear-dark
+// rgba(0,0,0,0) -> rgba(0,0,0,0.25)
+%gradient-linear-dark {
+  // IE9 SVG, needs conditional override of 'filter' to 'none'
+  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMC4yNSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+  @include gradient-vertical(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25));
+  @if $filter {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#40000000', GradientType=0); /* IE6-8 */
+	:root & {
+	  @extend %reset-filter;
+	}
+  }
+}
+
+//-----------------------------------------------------
+// reset-filter
+// Reset gradient filters for IE
+%reset-filter {
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+//-----------------------------------------------------
+// simple-btn
+// @include simple-btn;
+// @include simple-btn(true);
+// @include simple-btn($bgColor:$green);
+@mixin simple-btn($formbtn:false, $bgColor: $primary, $textColor:$white, $padding:$baseGap, $height:$baseBtnHeight, $fontSize: $baseFontSize) {
+  @include inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  text-align: center;
+  font-size: $fontSize;
+  padding: 0 $padding;
+  @if $formbtn {
+	height: $height;
+  } @else {
+	line-height: $height;
+  }
+  color: $textColor;
+  background-color: $bgColor;
+  border: none;
+
+  &:hover {
+	color: darken($textColor, 5%);
+	background-color: darken($bgColor, 5%);
+  }
+
+  &:active {
+	color: darken($textColor, 10%);
+	background-color: darken($bgColor, 10%);
+  }
+}
+
+//-----------------------------------------------------
+// simple-table
+// @include simple-table;
+// @include simple-table(false);
+// @include simple-table(true, $thBgColor: $orange);
+@mixin simple-table($th:true, $borderColor: $gray, $thBgColor: $primary, $thTextColor:$white) {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: $baseGap;
+
+  & th,
+  & td {
+	text-align: left;
+	padding: $baseGap / 2;
+	border: 1px solid $borderColor;
+  }
+
+  @if $th {
+	th {
+	  color: $thTextColor;
+	  background-color: $thBgColor;
+	  border-color: $thBgColor;
+	  border-bottom: 0 none;
+	}
+  }
+}
+
+//-----------------------------------------------------
+// input, select, textarea basic styles
+// border and padding
+%simple-form-basic {
+  border: 1px solid $gray;
+  padding: $baseFormPadding;
+  vertical-align: middle;
+  &:focus {
+	outline: 0 none;
+  }
+}
+
+//-----------------------------------------------------
+// simple-inputText
+@mixin simple-inputText($borderColorFocus: $focusColor, $height: $baseFormHeight) {
+  @extend %simple-form-basic;
+  height: $height;
+  @include transition(border linear 0.2s, box-shadow linear 0.2s);
+  @include box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.1));
+
+  &:focus {
+	border-color: rgba($borderColorFocus, 0.8);
+	@include box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba($borderColorFocus, 0.6));
+  }
+}
+
+%simple-text {
+  @include simple-inputText;
+}
+
+//-----------------------------------------------------
+// simple-textarea
+@mixin simple-textarea($borderColorFocus:$focusColor, $width:100%, $height:5 * $baseBtnHeight) {
+  @include simple-text($borderColorFocus);
+  height: $height;
+  width: $width;
+  vertical-align: top;
+  overflow-y: auto;
+  overflow-x: hidden;
+  resize: none;
+}
+
+%simple-textarea {
+  @include simple-textarea;
+}
+
+//-----------------------------------------------------
+// simple-select
+%simple-select {
+  @extend %simple-form-basic;
+  // select lte ie7
+  @if $lte7 {
+	*margin-top: 5px;
+	*margin-bottom: 5px;
+	*vertical-align: top;
+  }
+}
+
+//-----------------------------------------------------
+// radio & checkbox
+%simple-radio-checkbox {
+  margin: 0;
+  padding: 0;
+  @include rem(margin-right, 10);
+  @include rem(font-size, 26);
+  @if $lte7 {
+	*width: 13px;
+	*height: 13px;
+  }
+}

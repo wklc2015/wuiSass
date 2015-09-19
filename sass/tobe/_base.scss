@@ -1,0 +1,38 @@
+@charset "UTF-8";
+//-----------------------------------------------------
+// base scss
+// import six scss files:
+// 1. setting
+// 2. css3
+// 3. media-queries
+// 4. mixin
+// 5. grid
+// 6. normalize
+// base scss will output a reset styles base on normalize.scss
+//-----------------------------------------------------
+
+
+//-----------------------------------------------------
+// author:      jie_yi (http://weibo.com/marvin1023)
+// version:     3.0
+// time:        2014-02-08
+// url:         https://github.com/marvin1023/sassCore/
+//              http://tobe.w3cplus.com/
+//-----------------------------------------------------
+
+
+//-----------------------------------------------------
+// description: modified the files for myself
+// author:      wangkun
+// date:        2015-09-18
+//-----------------------------------------------------
+
+
+// import the core of basic files
+//-----------------------------------------------------
+@import "core/setting";
+@import "core/css3";
+@import "core/media-queries";
+@import "core/mixin";
+@import "core/grid";
+@import "core/reset";
