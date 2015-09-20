@@ -34,7 +34,7 @@
 // gradient-horizontal
 // gradient-horizontal-repeating
 // gradient-vertical
-//  gradient-vertical-repeating
+// gradient-vertical-repeating
 // gradient-angle
 // gradient-angle-repeating
 // gradient-radial
@@ -139,20 +139,20 @@
 // box-reflect
 //-----------------------------------------------------
 
+
+
 // the prefix of all brower, true or false
 //-----------------------------------------------------
-$prefixForWebkit: true !default;
-$prefixForMozilla: true !default;
-$prefixForMicrosoft: true !default;
-$prefixForOpera: false !default;
-//Opera from 15 turning to its -webkit, so the default is false, not the output o prefix
-$prefixNo: true !default;
+$prefixForWebkit			: true !default;
+$prefixForMozilla			: true !default;
+$prefixForMicrosoft			: true !default;
+$prefixForOpera				: false !default; //Opera from 15 turning to its -webkit, so the default is false, not the output o prefix
+$prefixNo					: true !default;
 
 // used for flex
-$flexOld: true !default;
-//09 version, use compatible with mobile，-webkit prefix
-$flexMid: true !default;
-//use for ie10, -ms prefix
+$flexOld				: true !default;//09 version, use compatible with mobile，-webkit prefix
+$flexMid				: true !default;//use for ie10, -ms prefix
+
 
 //-----------------------------------------------------
 // prefixer
@@ -162,11 +162,11 @@ $flexMid: true !default;
 	@if $prefix == webkit and $prefixForWebkit == true {
 	  -webkit-#{$property}: $value;
 	} @else if $prefix == moz and $prefixForMozilla == true {
-	  -moz-#{$property}: $value;
+	  -moz-#{$property}:    $value;
 	} @else if $prefix == ms and $prefixForMicrosoft == true {
-	  -ms-#{$property}: $value;
+	  -ms-#{$property}:     $value;
 	} @else if $prefix == o and $prefixForOpera == true {
-	  -o-#{$property}: $value;
+	  -o-#{$property}:      $value;
 	}
   }
   @if $prefixNo {
@@ -283,9 +283,9 @@ $flexMid: true !default;
 // https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering
 @mixin image-rendering($rendering: crisp-edges) {
   @if $rendering == crisp-edges {
-	image-rendering: -moz-crisp-edges; /* Firefox */
-	image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-	image-rendering: crisp-edges;
+	image-rendering:        -moz-crisp-edges; /* Firefox */
+	image-rendering:        -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+	image-rendering:        crisp-edges;
 	-ms-interpolation-mode: nearest-neighbor;
   } @else {
 	@include prefixer-value(image-rendering);
@@ -312,9 +312,9 @@ $flexMid: true !default;
   @font-face {
 	font-family: $font-family;
 	font-weight: $weight;
-	font-style: $style;
-	src: url('#{$file-path}.eot'); // 1
-	src: url('#{$file-path}.eot?#iefix') format('eot'), // 2 url('#{$file-path}.svg##{$font-family}') format('svg'), // 3 url('#{$file-path}.woff') format('woff'), // 4 url('#{$file-path}.ttf') format('truetype'); //5
+	font-style:  $style;
+	src:         url('#{$file-path}.eot'); // 1
+	src:         url('#{$file-path}.eot?#iefix') format('eot'), // 2 url('#{$file-path}.svg##{$font-family}') format('svg'), // 3 url('#{$file-path}.woff') format('woff'), // 4 url('#{$file-path}.ttf') format('truetype'); //5
   }
 }
 
@@ -414,9 +414,9 @@ $flexMid: true !default;
 // Radial gradient
 // for example：@include gradient-radial(#00F,#FFF);
 @mixin gradient-radial($gradient...) {
-  background-image: -webkit-radial-gradient($gradient); // Safari 5.1+, Chrome 10+
-  background-image: -o-radial-gradient($gradient); // Opera 11.10
-  background-image: radial-gradient($gradient); // Standard, IE1
+  background-image:  -webkit-radial-gradient($gradient); // Safari 5.1+, Chrome 10+
+  background-image:  -o-radial-gradient($gradient); // Opera 11.10
+  background-image:  radial-gradient($gradient); // Standard, IE1
   background-repeat: no-repeat;
 }
 
@@ -604,12 +604,12 @@ $flexMid: true !default;
 // transition-property
 @mixin transition-property($properties...) {
   -webkit-transition-property: transitionPropertyNames($properties, webkit);
-  -moz-transition-property: transitionPropertyNames($properties, moz);
-  -ms-transition-property: transitionPropertyNames($properties, ms);
+  -moz-transition-property:    transitionPropertyNames($properties, moz);
+  -ms-transition-property:     transitionPropertyNames($properties, ms);
   @if $prefixForOpera {
 	-o-transition-property: transitionPropertyNames($properties, o);
   }
-  transition-property: transitionPropertyNames($properties, false);
+  transition-property:         transitionPropertyNames($properties, false);
 }
 
 //-----------------------------------------------------
@@ -771,7 +771,7 @@ $flexMid: true !default;
 	@if $propertyPrefix {
 	  -webkit-#{$property} : $value;
 	} @else {
-	  #{$property} : -webkit-#{$value};
+	  #{$property} :         -webkit-#{$value};
 	}
   }
 }
@@ -783,7 +783,7 @@ $flexMid: true !default;
 	@if $propertyPrefix {
 	  -ms-#{$property} : $value;
 	} @else {
-	  #{$property} : -ms-#{$value};
+	  #{$property} :     -ms-#{$value};
 	}
   }
 }

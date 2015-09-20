@@ -1,0 +1,157 @@
+@charset "utf-8";
+/* -------------------------------------------------
+ * btn scss
+ * -------------------------------------------------
+*/
+
+//----------------------------------------------------
+$btnDefaultOutput               : false !default;
+$btnBaseClass                   : btn !default;
+$btnFormBaseClass               : formbtn !default;
+$btnSpecialClass                : 'primary' !default;
+
+//----------------------------------------------------
+// width: padding-left and padding-right
+// height
+// font-size
+$btnNormalSize                  : if($useRemUnit, 3.2rem 3.2rem 1.4rem, 32px 32px 14px) !default;
+$btnSmallSize                   : if($useRemUnit, 1.6rem 2.4rem 1.2rem, 16px 24px 12px) !default;
+$btnBigSize                     : if($useRemUnit, 5.0rem 5.0rem 1.6rem, 40px 40px 16px) !default;
+
+//----------------------------------------------------
+// $bgColor
+// $textColor
+$btnColor                       : #e6e6e6 #333 !default;
+
+//----------------------------------------------------
+$btnBgGradientSwitch            : false !default;
+$btnBorderRadius                : $baseRadius;
+
+//----------------------------------------------------
+// btn common style
+@mixin btn-basic($btnRadius: $btnBorderRadius) {
+  @include inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+  border: 0 none;
+  outline: none;
+  @if ($btnRadius) {
+	@include border-radius(rem($btnRadius));
+  }
+}
+
+//----------------------------------------------------
+// btn-gradient
+%btn-gradient {
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) inset, 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  @extend %gradient-linear-light;
+}
+
+//----------------------------------------------------
+// btn-size
+@mixin btn-size($padding:nth($btnNormalSize,1), $height:nth($btnNormalSize,2), $fontSize:nth($btnNormalSize,3), $formbtn: false) {
+  @if($padding){
+    padding: rem(0 $padding);
+  }@else {
+	display: block;
+    width: 100%;
+	padding: 0;
+  }
+  font-size: rem($fontSize);
+
+  @if $formbtn {
+	height: rem($height);
+  } @else {
+	line-height: rem($height);
+  }
+}
+
+//----------------------------------------------------
+// btn-color
+@mixin btn-color($bgColor:#e6e6e6, $textColor:#333) {
+  color: $textColor;
+  background-color: $bgColor;
+  @if $btnBgGradientSwitch {
+	border: 1px solid darken($bgColor, 5%);
+	border-color: lighten($bgColor, 2%) darken($bgColor, 5%) darken($bgColor, 5%) lighten($bgColor, 2%);
+  }
+
+  &:hover {
+	background-color: darken($bgColor, 5%);
+	color: $textColor;
+  }
+  &.active,
+  &:active{
+    background-color: darken($bgColor, 10%);
+    color: darken($textColor, 10%);
+  }
+}
+
+
+
+//----------------------------------
+// btn-multis
+@mixin btn-multis($classname, $btnSizeLists, $btnColorLists, $btnRadius: $btnBorderRadius){
+  $width: nth($btnSizeLists, 1);
+  $height: nth($btnSizeLists, 2);
+  $fontSize: nth($btnSizeLists, 3);
+  $formBtn: if(length($btnSizeLists) < 4, false, nth($btnSizeLists, 4));
+  $bgColor: nth($btnColorLists, 1);
+  $textColor: nth($btnColorLists, 2);
+  .#{$btnBaseClass}-#{$classname} {
+	@include btn-basic($btnRadius);
+	@include btn-size($width, $height, $fontSize, $formBtn);
+	@include btn-color($bgColor, $textColor);
+  }
+}
+//----------------------------------
+// btn-multi
+@mixin btn-multi($btnSizeLists, $btnColorLists, $btnRadius: $btnBorderRadius){
+  $width: nth($btnSizeLists, 1);
+  $height: nth($btnSizeLists, 2);
+  $fontSize: nth($btnSizeLists, 3);
+  $formBtn: if(length($btnSizeLists) < 4, false, nth($btnSizeLists, 4));
+  $bgColor: nth($btnColorLists, 1);
+  $textColor: nth($btnColorLists, 2);
+  @include btn-basic($btnRadius);
+  @include btn-size($width, $height, $fontSize, $formBtn);
+  @include btn-color($bgColor, $textColor);
+}
+
+
+
+
+//----------------------------------
+// output basic btn class style
+@if($btnDefaultOutput){
+  .#{$btnBaseClass} {
+	@include btn-basic($btnBorderRadius);
+	@include btn-size;
+	@include btn-color;
+  }
+
+  .#{$btnFormBaseClass} {
+	@include btn-basic($btnBorderRadius);
+	@include btn-size($formbtn: true);
+	@include btn-color;
+  }
+
+  //----------------------------------
+  // special btn class
+  .#{$btnBaseClass}-#{$btnSpecialClass} {
+	@include btn-color($primary, #fff);
+  }
+
+  //----------------------------------
+  @if $btnBgGradientSwitch {
+	.#{$btnBaseClass}, .#{$btnFormBaseClass} {
+	  @extend %btn-gradient;
+	}
+	@include btn-multis($btnBaseClass, $btnNormalSize, $btnColor, $btnBorderRadius);
+	@include btn-multis($btnBaseClass, $btnSmallSize, $btnColor, $btnBorderRadius);
+	@include btn-multis($btnBaseClass, $btnBigSize, $btnColor, $btnBorderRadius);
+  }
+}
+
+

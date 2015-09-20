@@ -23,6 +23,8 @@
 
 // the list of mixin
 // rem
+// bg
+// unitDelete
 // inline-block
 // center-block
 // float
@@ -58,19 +60,48 @@
 //-----------------------------------------------------
 // rem
 // output rem unit for numerical property
-@mixin rem($property, $value) {
-  @if $useRemUnit {
-	#{$property}: #{$value / $useRemRate}rem;
+// note: just supports numerical
+// 1. if there a unit, it will the same output
+@function _rem($value) {
+  @if (unit($value) == '%' or unit($value) == 'px' or unit($value) == 'rem') {
+	@return $value; /* 1 */
   } @else {
-	#{$property}: #{$value / 2}px;
+	//@if ($useRemUnit) {
+	//} @else {
+	//  @return #{$value / ($useRemRate * $useRemRate)}px;
+	//}
+	@return if($useRemUnit, #{$value / ($useMobileRate * $useRemRate)}rem, #{$value / ($useMobileRate * $useRemRate)}px);
   }
+}
+
+@function rem($value) {
+  $i: length($value);
+  $ret: _rem(nth($value, 1));
+  @if ($i > 1) {
+	@for $j from 2 to ($i + 1) {
+	  $temp: _rem(nth($value, $j));
+	  $ret: join($ret, $temp);
+	  $j: $j + 1;
+	}
+  }
+  @return $ret;
 }
 
 //-----------------------------------------------------
 // bg
-@mixin bg($url, $bgColor: transparent, $repeat: no-repeat, $position: 0 0, $bgSize: 100%) {
-  background: $bgColor url("#{$url}") $repeat $position;
-  @include rem(background-size, $bgSize);
+@function bg($url, $bgSize: false, $bgColor: false, $repeat: no-repeat, $position: 0 0) {
+  $con: url("#{$url}") $repeat $position;
+  @if ($bgSize) {
+	@return if($bgColor, $bgColor $con rem($bgSize), $con rem($bgSize));
+  } @else {
+	@return if($bgColor, $bgColor $con, $con);
+  }
+}
+
+//-----------------------------------------------------
+// unitDelete
+@function unitDelete($number) {
+  @return $number / ($number * 0 + 1);
 }
 
 //-----------------------------------------------------
@@ -78,7 +109,8 @@
 @mixin inline-block() {
   display: inline-block;
   @if $lte7 {
-	*display: inline; *zoom: 1;
+	*display: inline;
+	*zoom: 1;
   }
 }
 
@@ -90,7 +122,10 @@
 // center-block
 // set a block element to center,
 // it should set the element width
-@mixin center-block() {
+@mixin center-block($width: false) {
+  @if $width {
+	width: rem($width);
+  }
   margin-left: auto;
   margin-right: auto;
 }
@@ -163,9 +198,9 @@
 //-----------------------------------------------------
 // ul-has-style
 // ul has list style
-@mixin ul-has-style($style:disc, $marginLeft: $baseGap) {
-  margin-left: $marginLeft;
-  padding-left: $marginLeft * 2;
+@mixin ul-has-style($marginLeft: $baseGap, $style: disc) {
+  margin-left: rem($marginLeft);
+  padding-left: rem($marginLeft * 2);
   list-style: $style;
 }
 
@@ -205,8 +240,8 @@
   @if $lte7 {
 	font: 0/0 a; //1
 	_overflow: hidden; //3
-	_font-size: 10px; //3
-	_line-height: $height; //3
+	_font-size: rem(10); //3
+	_line-height: rem($height); //3
   }
 }
 
@@ -225,7 +260,7 @@
 
 @mixin ellipsis($width:100%) {
   @extend %ellipsis-basic;
-  width: $width;
+  width: rem($width);
 }
 
 //-----------------------------------------------------
@@ -252,8 +287,9 @@
   overflow: hidden;
 }
 
-@mixin triangle($direction, $size, $borderColor ) {
+@mixin triangle($direction, $borderWidth, $borderColor ) {
   @extend %triangle-basic;
+  $size: rem($borderWidth);
   @if $direction == top {
 	border-bottom: $size solid $borderColor;
 	border-left: $size dashed transparent;
@@ -310,8 +346,8 @@
 // Horizontal interval line
 @mixin horizontal-line($border:1px dashed $gray, $padding:$baseGap) {
   border-bottom: $border;
-  margin-bottom: $padding;
-  padding-bottom: $padding;
+  margin-bottom: rem($padding);
+  padding-bottom: rem($padding);
 }
 
 %horizontal-line {
@@ -321,7 +357,7 @@
 //-----------------------------------------------------
 //min-height
 @mixin min-height($height) {
-  min-height: $height;
+  min-height: rem($height);
   height: auto !important;
   @if $lte7 {
 	_height: $height;
@@ -340,7 +376,7 @@
   (min-resolution: 1.3dppx) {
 	// on retina, use image that's scaled by 2
 	background-image: url('#{$url}');
-	background-size: $width $height;
+	background-size: rem($width) rem($height);
   }
 }
 
@@ -427,12 +463,17 @@
   vertical-align: middle;
   cursor: pointer;
   text-align: center;
-  font-size: $fontSize;
-  padding: 0 $padding;
+  font-size: rem($fontSize);
+  @if $padding{
+	padding:rem(0 $padding);
+  }@else{
+	width: 100%;
+	@include box-sizing;
+  }
   @if $formbtn {
-	height: $height;
+	height: rem($height);
   } @else {
-	line-height: $height;
+	line-height: rem($height);
   }
   color: $textColor;
   background-color: $bgColor;
@@ -493,7 +534,7 @@
 // simple-inputText
 @mixin simple-inputText($borderColorFocus: $focusColor, $height: $baseFormHeight) {
   @extend %simple-form-basic;
-  height: $height;
+  height: rem($height);
   @include transition(border linear 0.2s, box-shadow linear 0.2s);
   @include box-shadow(inset 0 1px 3px rgba(0, 0, 0, 0.1));
 
@@ -510,9 +551,9 @@
 //-----------------------------------------------------
 // simple-textarea
 @mixin simple-textarea($borderColorFocus:$focusColor, $width:100%, $height:5 * $baseBtnHeight) {
-  @include simple-text($borderColorFocus);
-  height: $height;
-  width: $width;
+  @include simple-inputText($borderColorFocus);
+  height: rem($height);
+  width: rem($width);
   vertical-align: top;
   overflow-y: auto;
   overflow-x: hidden;
@@ -529,8 +570,8 @@
   @extend %simple-form-basic;
   // select lte ie7
   @if $lte7 {
-	*margin-top: 5px;
-	*margin-bottom: 5px;
+	*margin-top: rem(5);
+	*margin-bottom: rem(5);
 	*vertical-align: top;
   }
 }
@@ -540,10 +581,10 @@
 %simple-radio-checkbox {
   margin: 0;
   padding: 0;
-  @include rem(margin-right, 10);
-  @include rem(font-size, 26);
+  margin-right: rem(10);
+  font-size: rem(26);
   @if $lte7 {
-	*width: 13px;
-	*height: 13px;
+	*width: rem(13);
+	*height: rem(13);
   }
 }

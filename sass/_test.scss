@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+//p {
+//  padding: rem(20);
+//  button, a {
+//	@extend %btn-basic;
+//	@include btn-size(false, 100, 32, false);
+//	@include btn-color(#f00, #fff);
+//  }
+//}
+
+@include btn-multis(btn1, false 60 28, #ff0 #f00, 10);
+@include btn-multis(btn2, 30 88 28, #333 #fff);
+
+a{
+  @include btn-multi(false 88 28, #333 #fff);
+}
+
